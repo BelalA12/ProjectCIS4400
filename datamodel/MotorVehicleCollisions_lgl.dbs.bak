@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="MotorVehicleCollisions_lgl" id="LogicalDesign-24d7" database="LogicalDesign" >
+	<schema name="INSTANCE" catalogname="MotorVehicleCollisions_lgl" >
+		<table name="borough_dim" prior="Entity" >
+			<column name="borough_key" type="VARCHAR" jt="12" mandatory="y" />
+			<index name="pk_borough_dim" unique="PRIMARY_KEY" >
+				<column name="borough_key" />
+			</index>
+		</table>
+		<table name="collision_fact" prior="Entity" >
+			<column name="collision_id" type="BIGINT" jt="-5" mandatory="y" />
+			<column name="number_of_persons_injured" type="BIGINT" jt="-5" />
+			<column name="number_of_persons_killed" type="BIGINT" jt="-5" />
+			<column name="number_of_pedestrians_injured" type="BIGINT" jt="-5" />
+			<column name="number_of_pedestrians_killed" type="BIGINT" jt="-5" />
+			<column name="number_of_cyclist_injured" type="BIGINT" jt="-5" />
+			<column name="number_of_cyclist_killed" type="BIGINT" jt="-5" />
+			<column name="number_of_motorist_injured" type="BIGINT" jt="-5" />
+			<column name="number_of_motorist_killed" type="BIGINT" jt="-5" />
+			<column name="damage_amount" type="INT" jt="4" />
+			<column name="crash_date" type="DATE" jt="91" mandatory="y" />
+			<column name="borough" type="VARCHAR" jt="12" mandatory="y" />
+			<column name="crash_time" type="DATETIME" jt="93" mandatory="y" />
+			<column name="location" type="BIGINT" jt="-5" mandatory="y" />
+			<column name="contributing_factor" type="VARCHAR" jt="12" mandatory="y" />
+			<index name="pk_collision_fact" unique="PRIMARY_KEY" >
+				<column name="collision_id" />
+				<column name="borough" />
+				<column name="crash_time" />
+				<column name="location" />
+				<column name="contributing_factor" />
+			</index>
+			<index name="unq_number_of_persons_injured" unique="UNIQUE_INDEX" >
+				<column name="number_of_persons_injured" />
+			</index>
+			<index name="unq_crash_date" unique="UNIQUE_INDEX" >
+				<column name="crash_date" />
+			</index>
+			<fk name="fk_collision_fact_borough_dim" virtual="y" to_schema="MotorVehicleCollisions_lgl.INSTANCE" to_table="borough_dim" type="Identifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="borough" pk="borough_key" />
+			</fk>
+			<fk name="fk_collision_fact_date_dim" virtual="y" to_schema="MotorVehicleCollisions_lgl.INSTANCE" to_table="date_dim" type="Identifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="crash_date" pk="crash_date_key" />
+			</fk>
+			<fk name="fk_collision_fact_time_dim" virtual="y" to_schema="MotorVehicleCollisions_lgl.INSTANCE" to_table="time_dim" type="Identifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="crash_time" pk="crash_time_key" />
+			</fk>
+			<fk name="fk_collision_fact_location_dim" virtual="y" to_schema="MotorVehicleCollisions_lgl.INSTANCE" to_table="location_dim" type="Identifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="location" pk="location_key" />
+			</fk>
+			<fk name="fk_collision_fact_contributing_factor_dim" virtual="y" to_schema="MotorVehicleCollisions_lgl.INSTANCE" to_table="contributing_factor_dim" type="Identifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="contributing_factor" pk="contributing_factor_key" />
+			</fk>
+		</table>
+		<table name="contributing_factor_dim" prior="Entity" >
+			<column name="contributing_factor_key" prior="location_key" type="VARCHAR" jt="12" mandatory="y" />
+			<index name="pk_contributing_factor_dim" unique="PRIMARY_KEY" >
+				<column name="contributing_factor_key" />
+			</index>
+		</table>
+		<table name="date_dim" prior="Entity" >
+			<column name="crash_date_key" type="DATE" jt="91" mandatory="y" />
+			<index name="pk_date_dim" unique="PRIMARY_KEY" >
+				<column name="crash_date_key" />
+			</index>
+		</table>
+		<table name="location_dim" prior="Entity" >
+			<column name="location_key" type="BIGINT" jt="-5" mandatory="y" />
+			<column name="latitude" type="BIGINT" jt="-5" />
+			<column name="longitude" type="BIGINT" jt="-5" />
+			<column name="zip_code" type="BIGINT" jt="-5" />
+			<column name="on_street_name" type="VARCHAR" length="100" jt="12" />
+			<column name="cross_street_name" type="VARCHAR" length="100" jt="12" />
+			<column name="off_street_nam" type="VARCHAR" jt="12" />
+			<index name="pk_location_dim" unique="PRIMARY_KEY" >
+				<column name="location_key" />
+			</index>
+		</table>
+		<table name="time_dim" prior="Entity" >
+			<column name="crash_time_key" type="DATETIME" jt="93" mandatory="y" />
+			<index name="pk_time_dim" unique="PRIMARY_KEY" >
+				<column name="crash_time_key" />
+			</index>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout-13fc" show_relation="columns" >
+		<entity schema="MotorVehicleCollisions_lgl.INSTANCE" name="borough_dim" color="C1D8EE" x="289" y="340" />
+		<entity schema="MotorVehicleCollisions_lgl.INSTANCE" name="collision_fact" color="C1D8EE" x="561" y="306" />
+		<entity schema="MotorVehicleCollisions_lgl.INSTANCE" name="contributing_factor_dim" color="C1D8EE" x="935" y="374" />
+		<entity schema="MotorVehicleCollisions_lgl.INSTANCE" name="date_dim" color="C1D8EE" x="391" y="442" />
+		<entity schema="MotorVehicleCollisions_lgl.INSTANCE" name="location_dim" color="C1D8EE" x="833" y="102" />
+		<entity schema="MotorVehicleCollisions_lgl.INSTANCE" name="time_dim" color="C1D8EE" x="731" y="646" />
+		<callout x="51" y="51" pointer="Round" >
+			<comment><![CDATA[This is a layout - a diagram with tools.
+- Create new entities by right-clicking the layout. 
+- Double-click entity headers to edit.
+- For a better understanding of the schema, create multiple layouts.
+- Deploy the model into the database by converting it first to the physical design.]]></comment>
+		</callout>
+	</layout>
+</project>
